@@ -1,6 +1,5 @@
 import { Button, Box, ButtonGroup } from '@mui/material';
 
-import { login } from '../../store/auth/authSlice';
 import { useAppDispatch } from '../../hooks/redoxHooks';
 import { orange } from '@mui/material/colors';
 
@@ -12,14 +11,6 @@ export const NumberBoard: React.FC = () => {
   */
     const dispatch = useAppDispatch();
     
-    const handleLogin = (): void => {
-      dispatch(
-        login({
-          dni: "37161616",
-          password: "Abc123"
-        })
-      );
-    }
     const colum1 = [
     <Button key="one">1</Button>,
     <Button key="four">4</Button>,
@@ -40,7 +31,7 @@ export const NumberBoard: React.FC = () => {
         key="continue" 
         variant="contained"
         disabled
-        onClick={handleLogin}
+        
     >
         Continuar</Button>
     ];

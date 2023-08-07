@@ -1,48 +1,102 @@
-import React from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 
-import { VisibilityOff, Visibility } from '@mui/icons-material';
-import {
-    Box,
-    FormControl,
-    OutlinedInput,
-    InputAdornment,
-    IconButton,
-    InputLabel
-} from '@mui/material';
 import { orange } from '@mui/material/colors';
 
-import { useState, useEffect } from "react";
-import { AuthLogin } from '../../utils/interface';
+import {
+    TextField,
+    Alert,
+    AlertTitle,
+    Box,
+    Button,
+    ButtonGroup,
+    Stack,
+    FormControl,
+} from '@mui/material';
 
+import { PrimerColumna, SegundaColumna, TercerColumna } from '../../utils/interface';
+import { authReducer, InitialState } from '../../store/auth';
 export const InsertData: React.FC = () => {
 
-    const [credentials, setCredentials] = useState<AuthLogin>({
-        dni: "",
-        clave: ""
-    });
+
+    const [{ dni, clave }, dispatch] = useReducer(authReducer, InitialState)
+
+    const [focus, setFocus] = useState('');
+
+    let ingresoDNITemp = '';
+    let ingresoClaveTemp = '';
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setCredentials({ dni: "", clave: "" });
+            dispatch({ type: 'logout' });
+            setFocus('');
         }, 20000);
+        return () => clearTimeout(timeout);
+    }, [dni, clave]);
 
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, [credentials]);
-
-    const [showPassword, setShowPassword] = React.useState(false);
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        event.preventDefault();
+    const handleButtonPress = (value: string) => {
+        if (focus === 'dni') {
+            if (dni.length < 8) {
+                ingresoDNITemp = (ingresoDNITemp + value);
+            }
+            console.log('focus en DNI');
+            
+        } else if (focus === 'clave') {
+            if (clave.length < 4) {
+                ingresoClaveTemp = (ingresoClaveTemp + value);
+            }
+            console.log('focus en CLAVE');
+            
+        }
+        console.log(ingresoDNITemp);
+        console.log(ingresoClaveTemp);
     };
 
+    const handleButtonContinueClick = () => {
+        if ((dni && (dni.length >= 7 && dni.length <= 8)) && (clave && clave.length === 4)) {
+            dispatch({
+                type: 'login',
+                payload: {
+                    dni: ingresoDNITemp,
+                    clave: ingresoClaveTemp,
+                }
+            });
+
+            window.location.href = "/operaciones";
+            <Stack sx={{ width: '100%' }} spacing={2}>
+                <Alert severity="success" variant="filled">
+                    <AlertTitle>Success</AlertTitle>
+                    <strong>Datos Incorrectos</strong>
+                </Alert>
+            </Stack>
+
+        } else {
+            <Stack sx={{ width: '100%' }} spacing={2}>
+                <Alert severity="error" variant="filled">
+                    <AlertTitle>Error</AlertTitle>
+                    <strong>Datos Incorrectos</strong>
+                </Alert>
+            </Stack>
+        }
+    };
+
+    const handleButtonKeydown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (event.key === "Enter") {
+            handleButtonContinueClick();
+        }
+    };
+
+    const handleClearClick = () => ({ dni: '', clave: '' })
+
+    const createButton = (array: { id: string; value: string; name: string; }[]) => {
+
+        return (
+            array.map((item) => (
+                <Button key={item.id} onClick={() => handleButtonPress(item.value)}>{item.value}</Button>
+            ))
+        );
+    }
     return (
-        <Box
+        <><Box
             sx={{
                 border: "1px solid",
                 p: 6,
@@ -58,33 +112,67 @@ export const InsertData: React.FC = () => {
             }}
         >
             <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">DNI</InputLabel>
-                <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={showPassword ? 'text' : 'DNI'}
+                <TextField
                     label="DNI"
-                />
+                    value={ingresoDNITemp}
+                    onClick={() => handleButtonPress(dni)}
+                    onFocus={() => setFocus('dni')}
+                    inputProps={{ maxLength: 8 }} />
             </FormControl>
             <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">Clave</InputLabel>
-                <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={showPassword ? 'text' : 'clave'}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                            >
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                        </InputAdornment>
-                    }
+                <TextField
                     label="Clave"
-                />
+                    value={ingresoClaveTemp}
+                    onClick={() => handleButtonPress(clave)}
+                    onFocus={() => setFocus('clave')}
+                    inputProps={{ maxLength: 4 }} />
             </FormControl>
-        </Box>
+        </Box><Box sx={{
+            display: 'flex', '& > *': { m: 0.5, },
+            p: 3,
+            border: 2,
+            borderColor: orange[800],
+            height: 240,
+            gridColumn: '4',
+            gridRow: '2 / 3',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}
+        >
+                <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    variant="contained"
+                    sx={{ boxShadow: 0 }}
+                >
+                    {createButton(PrimerColumna)}
+                    <Button
+                        disabled={!dni || !clave}
+                        onClick={handleButtonContinueClick}
+                        onKeyDown={handleButtonKeydown}
+                        key="continue"
+                        variant="contained"
+                    >
+                        Continuar
+                    </Button>
+                </ButtonGroup>
+                <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    variant="contained"
+                    sx={{ boxShadow: 0 }}
+                >
+                    {createButton(SegundaColumna)}
+                </ButtonGroup>
+                <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    variant="contained"
+                    sx={{ boxShadow: 0 }}
+                >
+                    {createButton(TercerColumna)}
+                    <Button onClick={handleClearClick}>Borrar</Button>
+                </ButtonGroup>
+            </Box></>
     );
 }

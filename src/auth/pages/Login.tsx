@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material';
 
 //import { NumberBoard } from '../../cajero/components';
 import { InsertData } from "../components/InsertData";
-import { PanelNumer } from '../components/PanelNumeric';
 
 export const Login: React.FC = () => {
   return (
@@ -25,7 +24,6 @@ export const Login: React.FC = () => {
           }}
         >
           <InsertData />
-          <PanelNumer/>
         </Box>
       </div>
     </>

@@ -1,33 +1,38 @@
-import { createSlice }  from '@reduxjs/toolkit';
+/* eslint-disable no-case-declarations */
+import { AuthLogin, AuthLoginData } from 'utils/interface';
 
-export const authSlice = createSlice({
-    name: 'auth',
-    initialState: {
-        status: 'checking',
-        dni: null,
-        uid: null,
-        displayName: null,
-        errorMessage: null
-    },
-    reducers: {
-        login: ( state, { payload } ) => {
-            state.status = 'authenticated',
-            state.dni = payload.dni;
-            state.uid = payload.uid;
-            state.displayName = payload.displayName;
-            state.errorMessage = null;
-        },
-        logout: ( state, { payload } ) => {
-            state.status = 'not-authenticated',
-            state.dni = null;
-            state.uid = null;
-            state.displayName = null;
-            state.errorMessage = payload?.errorMessage;
-        },
-        checkingCredentials: (state) => {
-            state.status = 'checking';
-        }
+export const InitialState: AuthLoginData = {
+    validando: true,
+    token: null,
+    dni: '',
+    clave:'',
+    nombreCompleto: ''
+}
+
+export type AuthAction = 
+    | { type: 'logout' } 
+    | { type: 'login', payload: AuthLogin }
+
+export const authReducer = ( state: AuthLoginData, action: AuthAction ): AuthLoginData => {
+    switch (action.type) {
+        case 'logout':
+            return {
+                validando: false,
+                token: null,
+                dni: '',
+                clave:'',
+                nombreCompleto: ''
+            }
+        case 'login':
+            const { dni, clave, nombreCompleto } = action.payload;
+            return {
+                validando: false,
+                token: '123ABC',
+                dni,
+                clave,
+                nombreCompleto
+            }
+        default:
+            return state;
     }
-});
-
-export const { login, logout, checkingCredentials } = authSlice.actions;
+}
