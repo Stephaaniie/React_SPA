@@ -28,21 +28,17 @@ export const InsertData: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            dispatch({ type: 'logout' });
+            handleClearClick();
             setFocus('');
         }, 20000);
         return () => clearTimeout(timeout);
-    }, [dni, clave]);
+    }, [ingresoClaveTemp, ingresoDNITemp]);
 
     const handleButtonPress = (value: string) => {
         if (focus === 'dni') {
-            if (dni.length < 8) {
-                setIngresoDNITemp(ingresoDNITemp + value);
-            }
+            setIngresoDNITemp(ingresoDNITemp + value);
         } else if (focus === 'clave') {
-            if (clave.length < 4) {
                 setIngresoClaveTemp(ingresoClaveTemp + value);
-            }        
         }
     };
 
@@ -55,7 +51,6 @@ export const InsertData: React.FC = () => {
                     clave: ingresoClaveTemp,
                 }
             });
-
             window.location.href = '/operaciones';
         } else {
             <Stack sx={{ width: '100%' }} spacing={2}>
@@ -140,7 +135,7 @@ export const InsertData: React.FC = () => {
                 >
                     {createButton(PrimerColumna)}
                     <Button
-                        disabled={!dni || !clave}
+                        disabled={!ingresoDNITemp || !ingresoClaveTemp}
                         onClick={handleButtonContinueClick}
                         onKeyDown={handleButtonKeydown}
                         key="continue"
