@@ -15,15 +15,16 @@ import {
 
 import { PrimerColumna, SegundaColumna, TercerColumna } from '../../utils/interface';
 import { authReducer, InitialState } from '../../store/auth';
+
 export const InsertData: React.FC = () => {
 
+    const [ { dni, clave }, dispatch ] = useReducer(authReducer, InitialState)
 
-    const [{ dni, clave }, dispatch] = useReducer(authReducer, InitialState)
+    const [ focus, setFocus ] = useState('');
 
-    const [focus, setFocus] = useState('');
+    const [ingresoDNITemp, setIngresoDNITemp] = useState('');
 
-    let ingresoDNITemp = '';
-    let ingresoClaveTemp = '';
+    const [ingresoClaveTemp, setIngresoClaveTemp] = useState('');
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -36,19 +37,13 @@ export const InsertData: React.FC = () => {
     const handleButtonPress = (value: string) => {
         if (focus === 'dni') {
             if (dni.length < 8) {
-                ingresoDNITemp = (ingresoDNITemp + value);
+                setIngresoDNITemp(ingresoDNITemp + value);
             }
-            console.log('focus en DNI');
-            
         } else if (focus === 'clave') {
             if (clave.length < 4) {
-                ingresoClaveTemp = (ingresoClaveTemp + value);
-            }
-            console.log('focus en CLAVE');
-            
+                setIngresoClaveTemp(ingresoClaveTemp + value);
+            }        
         }
-        console.log(ingresoDNITemp);
-        console.log(ingresoClaveTemp);
     };
 
     const handleButtonContinueClick = () => {
@@ -61,14 +56,7 @@ export const InsertData: React.FC = () => {
                 }
             });
 
-            window.location.href = "/operaciones";
-            <Stack sx={{ width: '100%' }} spacing={2}>
-                <Alert severity="success" variant="filled">
-                    <AlertTitle>Success</AlertTitle>
-                    <strong>Datos Incorrectos</strong>
-                </Alert>
-            </Stack>
-
+            window.location.href = '/operaciones';
         } else {
             <Stack sx={{ width: '100%' }} spacing={2}>
                 <Alert severity="error" variant="filled">
@@ -80,65 +68,70 @@ export const InsertData: React.FC = () => {
     };
 
     const handleButtonKeydown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-        if (event.key === "Enter") {
+        if (event.key === 'Enter') {
             handleButtonContinueClick();
         }
     };
 
-    const handleClearClick = () => ({ dni: '', clave: '' })
+    const handleClearClick = () => {
+        setIngresoDNITemp('');
+        setIngresoClaveTemp('');
+    };
 
     const createButton = (array: { id: string; value: string; name: string; }[]) => {
-
         return (
             array.map((item) => (
                 <Button key={item.id} onClick={() => handleButtonPress(item.value)}>{item.value}</Button>
             ))
         );
     }
+
     return (
-        <><Box
-            sx={{
-                border: "1px solid",
-                p: 6,
-                m: 1,
-                borderRadius: 2,
-                fontSize: "0.875rem",
-                fontWeight: "700",
-                color: orange[800],
-                width: 500,
-                height: 300,
-                gridColumn: '2',
+        <>
+            <Box
+                sx={{
+                    border: "1px solid",
+                    p: 6,
+                    m: 1,
+                    borderRadius: 2,
+                    fontSize: "0.875rem",
+                    fontWeight: "700",
+                    color: orange[800],
+                    width: 500,
+                    height: 300,
+                    gridColumn: '2',
+                    gridRow: '2 / 3',
+                }}
+            >
+                <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
+                    <TextField
+                        label="DNI"
+                        value={ingresoDNITemp}
+                        onClick={() => handleButtonPress(dni)}
+                        onFocus={() => setFocus('dni')}
+                        inputProps={{ maxLength: 8 }} />
+                </FormControl>
+                <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
+                    <TextField
+                        label="Clave"
+                        value={ingresoClaveTemp}
+                        onClick={() => handleButtonPress(clave)}
+                        onFocus={() => setFocus('clave')}
+                        inputProps={{ maxLength: 4 }} />
+                </FormControl>
+            </Box>
+            <Box sx={{
+                display: 'flex', '& > *': { m: 0.5, },
+                p: 3,
+                border: 2,
+                borderColor: orange[800],
+                height: 240,
+                gridColumn: '4',
                 gridRow: '2 / 3',
+                justifyContent: 'center',
+                alignItems: 'center'
             }}
-        >
-            <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
-                <TextField
-                    label="DNI"
-                    value={ingresoDNITemp}
-                    onClick={() => handleButtonPress(dni)}
-                    onFocus={() => setFocus('dni')}
-                    inputProps={{ maxLength: 8 }} />
-            </FormControl>
-            <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
-                <TextField
-                    label="Clave"
-                    value={ingresoClaveTemp}
-                    onClick={() => handleButtonPress(clave)}
-                    onFocus={() => setFocus('clave')}
-                    inputProps={{ maxLength: 4 }} />
-            </FormControl>
-        </Box><Box sx={{
-            display: 'flex', '& > *': { m: 0.5, },
-            p: 3,
-            border: 2,
-            borderColor: orange[800],
-            height: 240,
-            gridColumn: '4',
-            gridRow: '2 / 3',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}
-        >
+            >
                 <ButtonGroup
                     orientation="vertical"
                     aria-label="vertical contained button group"
@@ -173,6 +166,7 @@ export const InsertData: React.FC = () => {
                     {createButton(TercerColumna)}
                     <Button onClick={handleClearClick}>Borrar</Button>
                 </ButtonGroup>
-            </Box></>
+            </Box>
+        </>
     );
 }
