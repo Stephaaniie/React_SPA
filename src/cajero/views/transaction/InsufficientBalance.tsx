@@ -1,4 +1,5 @@
 import { Alert, AlertTitle, Box, Button, Stack, ButtonGroup } from '@mui/material';
+import { ButtonCancel } from '../../components/ButtonCancel';
 
 export const InsufficientBalance: React.FC = () => {
     return (
@@ -12,9 +13,7 @@ export const InsufficientBalance: React.FC = () => {
             </Stack>
             <Box sx={{ '& button': { m: 1 } }} paddingLeft={45} >
                 <ButtonGroup >
-                    <Button variant="contained" size="medium">
-                        Cancelar
-                    </Button>
+                    <ButtonCancel />
                     <Button variant="contained" size="medium">
                         Consultar saldo
                     </Button>

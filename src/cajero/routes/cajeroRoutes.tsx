@@ -20,7 +20,7 @@ export const CajeroRoutes = () => {
         <Route path="cancel" element={ <OperationCanceled /> } />
         <Route path="realizado" element={ <SuccessfulOperation /> } />
 
-        <Route path="/*" element={ <Navigate to="/" /> } />
+        <Route path="/*" element={ <Navigate to="/auth/login" /> } />
     </Routes>
   )
 }

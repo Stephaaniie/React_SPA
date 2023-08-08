@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { orange } from '@mui/material/colors';
 import React from 'react';
+import { ButtonCancel } from '../../components/ButtonCancel';
 
 export const Extraction: React.FC = () => {
 
@@ -51,13 +52,7 @@ export const Extraction: React.FC = () => {
                 </Box>   
             </Box>
             <Box sx={{ display: 'flex', '& > *': { m: 6 } }} display={'flex'} alignItems={'center'} justifyContent={'space-evenly'}>
-                <ButtonGroup
-                    orientation="vertical"
-                    aria-label="vertical contained button group"
-                    variant="contained"
-                >
-                    <Button key="cancel">Cancelar</Button>
-                </ButtonGroup>
+                <ButtonCancel/>
                 <ButtonGroup
                     orientation="vertical"
                     aria-label="vertical contained button group"

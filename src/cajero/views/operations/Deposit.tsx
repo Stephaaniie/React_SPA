@@ -100,7 +100,7 @@ export const Deposit: React.FC = () => {
                     <NumberBoard />
                 </Box>
             </Box>
-            <ButtonCancel/>
+            <ButtonCancel />
         </>
     );
 };
