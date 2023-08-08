@@ -24,13 +24,13 @@ export const authReducer = ( state: AuthLoginData, action: AuthAction ): AuthLog
                 nombreCompleto: ''
             }
         case 'login':
-            const { dni, clave, nombreCompleto } = action.payload;
+            const { dni, clave } = action.payload;
             return {
                 validando: false,
                 token: '123ABC',
                 dni,
                 clave,
-                nombreCompleto
+                nombreCompleto: ''
             }
         default:
             return state;

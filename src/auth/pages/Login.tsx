@@ -1,7 +1,5 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-
-//import { NumberBoard } from '../../cajero/components';
 import { InsertData } from "../components/InsertData";
 
 export const Login: React.FC = () => {

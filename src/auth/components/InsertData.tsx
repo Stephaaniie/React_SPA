@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import { orange } from '@mui/material/colors';
 
@@ -17,6 +18,7 @@ import { PrimerColumna, SegundaColumna, TercerColumna } from '../../utils/interf
 import { authReducer, InitialState } from '../../store/auth';
 
 export const InsertData: React.FC = () => {
+    const navigate = useNavigate();
 
     const [ { dni, clave }, dispatch ] = useReducer(authReducer, InitialState)
 
@@ -51,7 +53,7 @@ export const InsertData: React.FC = () => {
                     clave: ingresoClaveTemp,
                 }
             });
-            window.location.href = '/operaciones';
+            navigate("/options", { replace: true });
         } else {
             <Stack sx={{ width: '100%' }} spacing={2}>
                 <Alert severity="error" variant="filled">
