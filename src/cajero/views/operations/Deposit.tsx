@@ -5,11 +5,32 @@ import {
     Typography,
     FormControl,
     FilledInput,
+    Button,
+    ButtonGroup
 } from '@mui/material';
 
-import { NumberBoard, ButtonCancel } from '../../../cajero/components';
+import { ButtonCancel } from '../../../cajero/components';
+import { PrimerColumna, SegundaColumna, TercerColumna } from 'utils/interface';
+import { orange } from '@mui/material/colors';
 
 export const Deposit: React.FC = () => {
+    
+    function handleClearClick(): void {
+        throw new Error('Function not implemented.');
+    }
+
+    function createButton(SegundaColumna: { id: string; value: string; name: string; }[]): React.ReactNode {
+        throw new Error('Function not implemented.');
+    }
+
+    function handleButtonContinueClick(): void {
+        throw new Error('Function not implemented.');
+    }
+
+    function handleButtonKeydown(): void {
+        throw new Error('Function not implemented.');
+    }
+
     return (
         <>
             <Box
@@ -97,7 +118,53 @@ export const Deposit: React.FC = () => {
                             $0
                         </Typography>
                     </Box>
-                    <NumberBoard />
+                    <Box sx={{
+                display: 'flex', '& > *': { m: 0.5, },
+                p: 3,
+                border: 2,
+                borderColor: orange[800],
+                height: 240,
+                gridColumn: '4',
+                gridRow: '2 / 3',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}
+            >
+                <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    variant="contained"
+                    sx={{ boxShadow: 0 }}
+                >
+                    {createButton(PrimerColumna)}
+                    <Button
+                        disabled
+                        onClick={handleButtonContinueClick}
+                        onKeyDown={handleButtonKeydown}
+                        key="continue"
+                        variant="contained"
+                    >
+                        Continuar
+                    </Button>
+                </ButtonGroup>
+                <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    variant="contained"
+                    sx={{ boxShadow: 0 }}
+                >
+                    {createButton(SegundaColumna)}
+                </ButtonGroup>
+                <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    variant="contained"
+                    sx={{ boxShadow: 0 }}
+                >
+                    {createButton(TercerColumna)}
+                    <Button onClick={handleClearClick}>Borrar</Button>
+                </ButtonGroup>
+            </Box>
                 </Box>
             </Box>
             <ButtonCancel />

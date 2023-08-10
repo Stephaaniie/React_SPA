@@ -5,7 +5,7 @@ const initialState: SettingState = {
     themeMode: 'ligth'
 }
 
-const settingsSlice= createSlice({
+const settingsSlice = createSlice({
     name: 'setting',
     initialState,
     reducers: {
