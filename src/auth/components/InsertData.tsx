@@ -1,32 +1,36 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect, useState } from 'react';
+import { reqResApi } from '../../api/reqResApi';
 import { orange } from '@mui/material/colors';
 
 import {
     TextField,
-    Alert,
-    AlertTitle,
     Box,
     Button,
     ButtonGroup,
-    Stack,
     FormControl,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
 } from '@mui/material';
 
 import { PrimerColumna, SegundaColumna, TercerColumna } from '../../utils/interface';
-import { authReducer, InitialState } from '../../store/auth';
+import { isDisabled } from '../../hooks/useLogin';
+import { useAuth } from '../provider/AuthProvider';
+import { Navigate } from 'react-router-dom';
 
 export const InsertData: React.FC = () => {
-    const navigate = useNavigate();
 
-    const [ { dni, clave }, dispatch ] = useReducer(authReducer, InitialState)
+    const [focus, setFocus] = useState('');
 
-    const [ focus, setFocus ] = useState('');
+    const [dni, setdni] = useState('');
 
-    const [ingresoDNITemp, setIngresoDNITemp] = useState('');
+    const [password, setpassword] = useState('');
 
-    const [ingresoClaveTemp, setIngresoClaveTemp] = useState('');
+    const [open, setOpen] = useState(false);
+
+    const auth = useAuth();
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -34,45 +38,40 @@ export const InsertData: React.FC = () => {
             setFocus('');
         }, 20000);
         return () => clearTimeout(timeout);
-    }, [ingresoClaveTemp, ingresoDNITemp]);
+    }, [password, dni]);
+
+    const handleClearClick = () => {
+        setdni('');
+        setpassword('');
+    };
 
     const handleButtonPress = (value: string) => {
         if (focus === 'dni') {
-            setIngresoDNITemp(ingresoDNITemp + value);
-        } else if (focus === 'clave') {
-                setIngresoClaveTemp(ingresoClaveTemp + value);
+            setdni(dni + value);
+        } else if (focus === 'password') {
+            setpassword(password + value);
         }
     };
 
-    const handleButtonContinueClick = () => {
-        if ((dni && (dni.length >= 7 && dni.length <= 8)) && (clave && clave.length === 4)) {
-            dispatch({
-                type: 'login',
-                payload: {
-                    dni: ingresoDNITemp,
-                    clave: ingresoClaveTemp,
-                }
-            });
-            navigate("/options", { replace: true });
-        } else {
-            <Stack sx={{ width: '100%' }} spacing={2}>
-                <Alert severity="error" variant="filled">
-                    <AlertTitle>Error</AlertTitle>
-                    <strong>Datos Incorrectos</strong>
-                </Alert>
-            </Stack>
-        }
-    };
+    const handleButtonContinue = () => {
+        reqResApi.post('/customer/login', {
+            dni: dni,
+            password: password
+        })
+        .then((resp) => {
+            if (resp.data.token) {
+                auth.setAccessTokenOnly(resp.data.token);
+            }
+        }).catch((error) => {
+            console.log(error);
+            setOpen(true);
+        });
+    }
 
     const handleButtonKeydown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
         if (event.key === 'Enter') {
-            handleButtonContinueClick();
+            handleButtonContinue();
         }
-    };
-
-    const handleClearClick = () => {
-        setIngresoDNITemp('');
-        setIngresoClaveTemp('');
     };
 
     const createButton = (array: { id: string; value: string; name: string; }[]) => {
@@ -85,6 +84,28 @@ export const InsertData: React.FC = () => {
 
     return (
         <>
+            <Box sx={{ width: '100%' }}>
+                <Dialog
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"DNI ó PASSWORD INCORRECTO."}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Los datos ingresados son incorrectos por favor, volver a intentarlo nuevamente.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { setOpen(false); }} autoFocus>
+                            <var>Cerrar</var>
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
             <Box
                 sx={{
                     border: "1px solid",
@@ -103,17 +124,17 @@ export const InsertData: React.FC = () => {
                 <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
                     <TextField
                         label="DNI"
-                        value={ingresoDNITemp}
+                        value={dni}
                         onClick={() => handleButtonPress(dni)}
                         onFocus={() => setFocus('dni')}
                         inputProps={{ maxLength: 8 }} />
                 </FormControl>
                 <FormControl sx={{ m: 1, width: '45ch' }} variant="outlined">
                     <TextField
-                        label="Clave"
-                        value={ingresoClaveTemp}
-                        onClick={() => handleButtonPress(clave)}
-                        onFocus={() => setFocus('clave')}
+                        label="Password"
+                        value={password}
+                        onClick={() => handleButtonPress(password)}
+                        onFocus={() => setFocus('password')}
                         inputProps={{ maxLength: 4 }} />
                 </FormControl>
             </Box>
@@ -137,8 +158,8 @@ export const InsertData: React.FC = () => {
                 >
                     {createButton(PrimerColumna)}
                     <Button
-                        disabled={!ingresoDNITemp || !ingresoClaveTemp}
-                        onClick={handleButtonContinueClick}
+                        disabled={isDisabled(dni, password) ? false : true}
+                        onClick={handleButtonContinue}
                         onKeyDown={handleButtonKeydown}
                         key="continue"
                         variant="contained"

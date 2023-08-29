@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 import { ButtonCancel } from '../../../cajero/components';
-import { PrimerColumna, SegundaColumna, TercerColumna } from 'utils/interface';
+import { PrimerColumna, SegundaColumna, TercerColumna } from '../../../utils/interface';
 import { orange } from '@mui/material/colors';
 
 export const Deposit: React.FC = () => {

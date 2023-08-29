@@ -7,6 +7,7 @@ import {
   InsertOtherAmount,
   SuccessfulOperation,
   InsufficientBalance,
+  SelectOperations,
 } from "../../cajero/views/index";
 
 export const CajeroRoutes = () => {
@@ -19,7 +20,7 @@ export const CajeroRoutes = () => {
         <Route path="saldo-insuficiente" element={ <InsufficientBalance /> } />
         <Route path="cancel" element={ <OperationCanceled /> } />
         <Route path="realizado" element={ <SuccessfulOperation /> } />
-
+        <Route path="auth/options" element = { <SelectOperations/> } />
         <Route path="/*" element={ <Navigate to="/auth/login" /> } />
     </Routes>
   )
