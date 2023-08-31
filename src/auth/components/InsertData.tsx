@@ -18,7 +18,7 @@ import {
 import { PrimerColumna, SegundaColumna, TercerColumna } from '../../utils/interface';
 import { isDisabled } from '../../hooks/useLogin';
 import { useAuth } from '../provider/AuthProvider';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const InsertData: React.FC = () => {
 
@@ -31,6 +31,8 @@ export const InsertData: React.FC = () => {
     const [open, setOpen] = useState(false);
 
     const auth = useAuth();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -61,6 +63,7 @@ export const InsertData: React.FC = () => {
         .then((resp) => {
             if (resp.data.token) {
                 auth.setAccessTokenOnly(resp.data.token);
+                navigate("auth/options", { replace: true });
             }
         }).catch((error) => {
             console.log(error);
