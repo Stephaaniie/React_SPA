@@ -10,4 +10,4 @@ Desarrollar una SPA (Single Page Application) en React con TS, de un cajero auto
 2. ```yarn install```
 3. Clonar el archivo ```.env.template``` y renombrarlo a ```.env```
 4. Cambiar las variables de entorno
-5. Levantar: ```yarn run dev```
+5. Levantar: ```yarn dev```

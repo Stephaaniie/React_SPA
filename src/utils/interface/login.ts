@@ -4,7 +4,7 @@ export interface AuthRegister {
     fullName: string;
     id?:       string;
     isActive?: boolean;
-    roles?:    string[];
+    roles?:    Array<string>;
     token:    string;
 }
 

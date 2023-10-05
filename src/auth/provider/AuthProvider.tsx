@@ -7,8 +7,7 @@ import { AuthProviderProps } from "../../utils/interface/AuthProviderProps";
 const AuthContext = createContext({
   isAuthenticated: false,
   getAccessToken: () => {},
-  setAccessTokenOnly: (_accessToken: string) => {console.log("entree");
-  },
+  setAccessTokenOnly: (_accessToken: string) => {},
 });
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -20,10 +19,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   function setAccessTokenOnly(accessToken: string) {
-    console.log("setAccessTokenOnly", accessToken);
     setAccessToken(accessToken);
     setIsAuthenticated(true);
-    console.log("setAccessTokenOnly", accessToken);
   }
 
   return (
